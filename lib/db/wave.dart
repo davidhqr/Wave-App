@@ -14,6 +14,7 @@ class Wave {
   int id;
   String code;
   String type;
+  String status;
   String text;
   List<String> files;
 
@@ -21,6 +22,7 @@ class Wave {
     this.id,
     this.code,
     this.type,
+    this.status,
     this.text,
     this.files,
   });
@@ -29,6 +31,7 @@ class Wave {
     id: json["id"],
     code: json["code"],
     type: json["type"],
+    status: json["status"],
     text: json["text"],
     files: json["files"],
   );
@@ -37,6 +40,7 @@ class Wave {
     "id": id,
     "code": code,
     "type": type,
+    "status": status,
     "text": text,
     "files": files,
   };

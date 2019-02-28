@@ -19,21 +19,22 @@ class DBProvider {
     return _database;
   }
 
-  _initDB() async {
+  Future<Database> _initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "WaveDB.db");
 
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE waves ("
-          "id INTEGER PRIMARY KEY,"
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
           "code TEXT,"
           "type TEXT,"
+          "status TEXT,"
           "text TEXT"
           ")");
 
       await db.execute("CREATE TABLE files ("
-          "id INTEGER PRIMARY KEY,"
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
           "wave_id INTEGER,"
           "url TEXT,"
           "FOREIGN KEY (wave_id) REFERENCES waves(id)"
@@ -41,18 +42,27 @@ class DBProvider {
     });
   }
 
-  newTextWave(Wave wave) async {
+  void newTextWave(Wave wave) async {
     final db = await database;
-    var res;
     if (wave.type == "text" && wave.files == null) {
-      res = await db.rawInsert(
-          "INSERT Into Wave (id,code,type,text)"
-              " VALUES (${wave.id},${wave.code},${wave.type},${wave.text})");
+      await db.rawInsert(
+          "INSERT INTO waves (code,type,text)" +
+              " VALUES (${wave.code},${wave.type},${wave.text})");
     } else {
-      res = await db.rawInsert(
-          "INSERT Into Wave (id,code,type,text)"
-              " VALUES (${wave.id},${wave.code},${wave.type},${wave.text})");
+      int id = await db.rawInsert(
+          "INSERT INTO waves (code,type)" +
+              " VALUES (${wave.code},${wave.type})");
+
+      String fileQuery = "INSERT INTO files (wave_id,url) VALUES";
+      for (int i = 0; i < wave.files.length; i++) {
+        String url = wave.files[i];
+        fileQuery += " ($id,$url)";
+        if (i < wave.files.length - 1) {
+          fileQuery += ",";
+        }
+      }
+
+      await db.rawInsert(fileQuery);
     }
-    return res;
   }
 }
