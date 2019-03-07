@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:logging/logging.dart';
 import 'package:wave/utils.dart';
-import 'package:wave/wave_request.dart';
+import 'package:wave/send_wave_request.dart';
 
 class SendImagePage extends StatefulWidget {
   SendImagePage({Key key, this.title}) : super(key: key);
@@ -41,7 +41,7 @@ class _SendImagePageState extends State<SendImagePage> {
     }
 
     String code = Utils.generateCode();
-    WaveRequest request = new WaveRequest(context, code, null, _imagePath, false);
+    SendWaveRequest request = new SendWaveRequest(context, code, null, _imagePath, false);
     request.send();
   }
 

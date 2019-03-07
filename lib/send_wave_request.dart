@@ -8,7 +8,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class WaveRequest {
+class SendWaveRequest {
   BuildContext _context;
   String _code;
   String _text;
@@ -17,7 +17,7 @@ class WaveRequest {
 
   final Logger log = new Logger('WaveRequest');
 
-  WaveRequest(BuildContext context, String code, String text, String filePath,
+  SendWaveRequest(BuildContext context, String code, String text, String filePath,
       bool offline)
       : _context = context,
         _code = code,

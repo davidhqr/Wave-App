@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wave/wave_request.dart';
+import 'package:wave/send_wave_request.dart';
 import 'package:logging/logging.dart';
 import 'package:wave/utils.dart';
 
@@ -31,7 +31,7 @@ class _SendTextPageState extends State<SendTextPage> {
     }
 
     String code = Utils.generateCode();
-    WaveRequest request = new WaveRequest(context, code, text, null, offline);
+    SendWaveRequest request = new SendWaveRequest(context, code, text, null, offline);
     request.send();
   }
 

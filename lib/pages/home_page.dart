@@ -9,6 +9,8 @@ import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wave/widgets/receive_dialog.dart';
 import 'package:wave/wave_response.dart';
+import 'package:wave/get_wave_request.dart';
+import 'package:wave/utils.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -31,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     _initChirp();
     _configChirp();
     _setChirpCallbacks();
+    _startAudioProcessing();
   }
 
   Future<void> _requestPermissions() async {
@@ -43,32 +46,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initChirp() async {
-    ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+    await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
   }
 
   Future<void> _configChirp() async {
-    ChirpSDK.setConfig(Constants.APP_CONFIG);
+    await ChirpSDK.setConfig(Constants.APP_CONFIG);
   }
 
-  Future<void> _setChirpCallbacks() async {
+  void _setChirpCallbacks() {
     ChirpSDK.onReceived.listen((dataEvent) {
-      log.info("Received payload: " + dataEvent.payload.toString());
+      String payload = dataEvent.payload.toString();
+      log.info("Received payload: " + payload);
+      if (listening) {
+        GetWaveRequest(payload).get().then((WaveResponse response) {
+          showDialog(
+              context: context,
+              builder: ((BuildContext context) {
+                return ReceiveDialog(response);
+              }));
+        });
+      }
     });
 
     ChirpSDK.onError.listen((errorEvent) {
       log.severe(errorEvent.message);
     });
+
+    ChirpSDK.onReceiving.listen((dataEvent) {
+      log.info("Receiving payload");
+    });
   }
 
-  void startListening() {
-    showDialog(
-        context: context,
-        builder: ((BuildContext context) {
-          return ReceiveDialog(WaveResponse("1234", "testtest", null, null));
-        }));
-//    setState(() {
-//      listening = true;
-//    });
+  Future<void> _startAudioProcessing() async {
+    await ChirpSDK.start();
+  }
+
+  void startListening(BuildContext context) {
+    if (listening) {
+      Utils.showSnackBar(context, "Stopped listening");
+    } else {
+      Utils.showSnackBar(context, "Started listening");
+    }
+    setState(() {
+      listening = !listening;
+    });
   }
 
   @override
@@ -83,7 +104,8 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SendTextPage(title: 'Send Text Wave')),
+                    builder: (context) =>
+                        SendTextPage(title: 'Send Text Wave')),
               );
             },
           ),
@@ -93,7 +115,8 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SendImagePage(title: 'Send Image Wave')),
+                    builder: (context) =>
+                        SendImagePage(title: 'Send Image Wave')),
               );
             },
           ),
@@ -103,22 +126,31 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SendFilePage(title: 'Send File Wave')),
+                    builder: (context) =>
+                        SendFilePage(title: 'Send File Wave')),
               );
             },
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [PulsingButton(startListening)],
-            ),
-          ),
-        ],
+      body: Builder(
+        builder: (BuildContext context) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PulsingButton(() {
+                      startListening(context);
+                    })
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

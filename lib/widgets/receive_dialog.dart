@@ -34,10 +34,10 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
   Widget buildTextWaveDialog(WaveResponse waveResponse) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12))),
+          borderRadius: BorderRadius.all(Radius.circular(8))),
       content: Container(
         width: 300,
-        height: 280,
+        height: 300,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -68,13 +68,13 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
 
             // dialog center
             Padding(
-              padding: const EdgeInsets.only(top: 30),
+              padding: const EdgeInsets.only(top: 22),
               child: SelectableField(
                 controller: _textController,
-                maxLines: 5,
+                maxLines: 7,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(5)),
                 ),
                 style: TextStyle(
                   color: Colors.black54,
@@ -84,7 +84,7 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(top: 28),
+              padding: const EdgeInsets.only(top: 22),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
