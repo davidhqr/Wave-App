@@ -13,6 +13,7 @@ import 'package:wave/get_wave_request.dart';
 import 'package:wave/utils.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:validators/validators.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -25,6 +26,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool listening = false;
+  List<String> _waveData = new List<String>();
 
   final Logger log = new Logger('HomePage');
 
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
     _configChirp();
     _setChirpCallbacks();
     _startAudioProcessing();
+    setWaveData();
   }
 
   Future<void> _requestPermissions() async {
@@ -62,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       if (listening) {
         if (payload.startsWith("wv")) {
           GetWaveRequest(payload).get().then((WaveResponse response) {
-            setPrefs(response);
+            saveWaveResponse(response);
             showDialog(
                 context: context,
                 builder: ((BuildContext context) {
@@ -71,7 +74,7 @@ class _HomePageState extends State<HomePage> {
           });
         } else {
           WaveResponse response = WaveResponse(null, payload, null, null);
-          setPrefs(response);
+          saveWaveResponse(response);
           showDialog(
               context: context,
               builder: ((BuildContext context) {
@@ -94,7 +97,7 @@ class _HomePageState extends State<HomePage> {
     await ChirpSDK.start();
   }
 
-  void setPrefs(WaveResponse waveResponse) async {
+  void saveWaveResponse(WaveResponse waveResponse) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> list = prefs.getStringList("waves");
     if (list == null) {
@@ -106,6 +109,16 @@ class _HomePageState extends State<HomePage> {
       list.add(waveResponse.files[0].toString());
     }
     prefs.setStringList("waves", list);
+    setWaveData();
+  }
+
+  void setWaveData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (prefs.getStringList("waves") != null) {
+        _waveData = prefs.getStringList("waves");
+      }
+    });
   }
 
   void startListening(BuildContext context) {
@@ -151,6 +164,27 @@ class _HomePageState extends State<HomePage> {
       return PulsingButton(() {
         startListening(context);
       });
+    }
+  }
+
+  Widget getHistoryElement(String item) {
+    if (isURL(item)) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Image.network(item),
+        ),
+      );
+    } else {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Text(
+            item,
+            style: TextStyle(fontSize: 16.0),
+          ),
+        ),
+      );
     }
   }
 
@@ -228,28 +262,19 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(12),
-                          child: Text("Past Waves",
+                          child: Text("Recent Waves",
                               style: TextStyle(fontSize: 20)),
                         ),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, bottom: 8),
-                            child: ListView(
-                              physics: AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              children: [
-                                ListTile(
-                                  leading: Icon(Icons.map),
-                                  title: Text('Map'),
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.photo_album),
-                                  title: Text('Album'),
-                                ),
-                              ],
-                            ),
-                          ),
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, bottom: 8),
+                              child: ListView.builder(
+                                itemCount: _waveData.length,
+                                itemBuilder: (context, position) {
+                                  return getHistoryElement(_waveData[_waveData.length - 1 - position]);
+                                },
+                              )),
                         ),
                       ],
                     ),

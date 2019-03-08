@@ -30,6 +30,7 @@ dependencies:
   flutter_spinkit: ^3.1.0
   dio: ^2.0.20
   shared_preferences: ^0.5.1
+  validators: ^1.0.0
 
 dev_dependencies:
   flutter_test:
