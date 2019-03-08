@@ -12,6 +12,7 @@ import 'package:wave/wave_response.dart';
 import 'package:wave/get_wave_request.dart';
 import 'package:wave/utils.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -61,6 +62,7 @@ class _HomePageState extends State<HomePage> {
       if (listening) {
         if (payload.startsWith("wv")) {
           GetWaveRequest(payload).get().then((WaveResponse response) {
+            setPrefs(response);
             showDialog(
                 context: context,
                 builder: ((BuildContext context) {
@@ -68,10 +70,12 @@ class _HomePageState extends State<HomePage> {
                 }));
           });
         } else {
+          WaveResponse response = WaveResponse(null, payload, null, null)
+          setPrefs(response);
           showDialog(
               context: context,
               builder: ((BuildContext context) {
-                return ReceiveDialog(WaveResponse(null, payload, null, null));
+                return ReceiveDialog(response);
               }));
         }
       }
@@ -88,6 +92,20 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _startAudioProcessing() async {
     await ChirpSDK.start();
+  }
+
+  void setPrefs(WaveResponse waveResponse) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> list = prefs.getStringList("waves");
+    if (list == null) {
+      list = new List<String>();
+    }
+    if (waveResponse.text != null) {
+      list.add(waveResponse.text);
+    } else {
+      list.add(waveResponse.files[0].toString());
+    }
+    prefs.setStringList("waves", list);
   }
 
   void startListening(BuildContext context) {
@@ -196,7 +214,8 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     height: 380,
                     decoration: new BoxDecoration(
-                        color: Colors.white, //new Color.fromRGBO(255, 0, 0, 0.0),
+                        color: Colors.white,
+                        //new Color.fromRGBO(255, 0, 0, 0.0),
                         borderRadius: new BorderRadius.all(Radius.circular(20)),
                         boxShadow: [
                           BoxShadow(
@@ -209,8 +228,8 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(12),
-                          child:
-                          Text("Past Waves", style: TextStyle(fontSize: 20)),
+                          child: Text("Past Waves",
+                              style: TextStyle(fontSize: 20)),
                         ),
                         Expanded(
                           child: Padding(
