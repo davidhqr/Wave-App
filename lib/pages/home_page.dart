@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                 }));
           });
         } else {
-          WaveResponse response = WaveResponse(null, payload, null, null)
+          WaveResponse response = WaveResponse(null, payload, null, null);
           setPrefs(response);
           showDialog(
               context: context,
