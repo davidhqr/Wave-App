@@ -59,13 +59,21 @@ class _HomePageState extends State<HomePage> {
       String payload = new String.fromCharCodes(dataEvent.payload);
       log.info("Received payload: " + payload);
       if (listening) {
-        GetWaveRequest(payload).get().then((WaveResponse response) {
+        if (payload.startsWith("wv")) {
+          GetWaveRequest(payload).get().then((WaveResponse response) {
+            showDialog(
+                context: context,
+                builder: ((BuildContext context) {
+                  return ReceiveDialog(response);
+                }));
+          });
+        } else {
           showDialog(
               context: context,
               builder: ((BuildContext context) {
-                return ReceiveDialog(response);
+                return ReceiveDialog(WaveResponse(null, payload, null, null));
               }));
-        });
+        }
       }
     });
 
@@ -181,49 +189,51 @@ class _HomePageState extends State<HomePage> {
                   children: [getListeningWidget(context)],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 40, left: 20, right: 20, bottom: 40),
-                child: Container(
-                  height: 380,
-                  decoration: new BoxDecoration(
-                      color: Colors.white, //new Color.fromRGBO(255, 0, 0, 0.0),
-                      borderRadius: new BorderRadius.all(Radius.circular(20)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xFFbfbfbf),
-                          blurRadius: 20,
-                          // has the effect of softening the shadow
-                        )
-                      ]),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child:
-                        Text("Past Waves", style: TextStyle(fontSize: 20)),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, right: 8, bottom: 8),
-                          child: ListView(
-                            physics: AlwaysScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.map),
-                                title: Text('Map'),
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.photo_album),
-                                title: Text('Album'),
-                              ),
-                            ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 40, left: 20, right: 20, bottom: 40),
+                  child: Container(
+                    height: 380,
+                    decoration: new BoxDecoration(
+                        color: Colors.white, //new Color.fromRGBO(255, 0, 0, 0.0),
+                        borderRadius: new BorderRadius.all(Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFFbfbfbf),
+                            blurRadius: 20,
+                            // has the effect of softening the shadow
+                          )
+                        ]),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child:
+                          Text("Past Waves", style: TextStyle(fontSize: 20)),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8, right: 8, bottom: 8),
+                            child: ListView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.map),
+                                  title: Text('Map'),
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.photo_album),
+                                  title: Text('Album'),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

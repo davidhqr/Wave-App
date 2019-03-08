@@ -1,10 +1,10 @@
 class WaveResponse {
   String _code;
   String _text;
-  List<String> _files;
+  List<dynamic> _files;
   DateTime _date;
 
-  WaveResponse(String code, String text, List<String> files, DateTime date)
+  WaveResponse(String code, String text, List<dynamic> files, DateTime date)
       : _code = code,
         _text = text,
         _files = files,
@@ -16,9 +16,9 @@ class WaveResponse {
     _date = value;
   }
 
-  List<String> get files => _files;
+  List<dynamic> get files => _files;
 
-  set files(List<String> value) {
+  set files(List<dynamic> value) {
     _files = value;
   }
 

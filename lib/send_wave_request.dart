@@ -31,7 +31,7 @@ class SendWaveRequest {
     _startAudioProcessing();
   }
 
-  void send() {
+  void send() async {
     if (_code == null || _code.isEmpty) {
       Utils.showSnackBar(_context, "Error sending Wave - please try again");
       log.warning("Error saving wave request with no code");
@@ -40,6 +40,11 @@ class SendWaveRequest {
 
     if (_text != null && _text.isNotEmpty) {
       if (_offline) {
+        var payload = Uint8List.fromList(_text.codeUnits);
+        await _sendChirp(payload);
+
+        Utils.showSnackBar(_context, "Wave sent successfully");
+        log.info("Successfully sent offline file wave");
       } else {
         log.info("Saving online text wave");
         _sendOnlineTextWave();
@@ -92,7 +97,7 @@ class SendWaveRequest {
     formData.add("files[]", new UploadFileInfo(File(_filePath), "test.jpg"));
     formData.add("code", _code);
 
-    dio
+    await dio
         .post(Constants.BASE_WAVE_URL,
             data: formData,
             options: Options(method: 'POST', responseType: ResponseType.json))

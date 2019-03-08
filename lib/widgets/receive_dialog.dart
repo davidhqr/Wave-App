@@ -24,7 +24,7 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.waveResponse.text.isNotEmpty) {
+    if (widget.waveResponse.text != null && widget.waveResponse.text.isNotEmpty) {
       return buildTextWaveDialog(widget.waveResponse);
     } else {
       return buildFileWaveDialog(widget.waveResponse);
@@ -47,7 +47,7 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                 Container(
                   decoration: BoxDecoration(color: Colors.white),
                   child: Text(
-                    'Incoming Text Wave',
+                    'Incoming Wave',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
@@ -91,8 +91,8 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                   RaisedButton(
                     color: Color(0xFFef5350),
                     elevation: 2,
-                    shape:
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -104,15 +104,15 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: RaisedButton(
                       color: Color(0xFF66BB6A),
                       elevation: 2,
-                      shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
                       onPressed: () {
+                        Navigator.pop(context);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(10),
@@ -132,5 +132,91 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
     );
   }
 
-  Widget buildFileWaveDialog(WaveResponse waveResponse) {}
+  Widget buildFileWaveDialog(WaveResponse waveResponse) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8))),
+      content: Container(
+        width: 300,
+        height: 300,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // dialog top
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(
+                    'Incoming Wave',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Divider(
+                color: Colors.grey,
+                height: 4,
+              ),
+            ),
+
+            // dialog center
+            Padding(
+              padding: const EdgeInsets.only(top: 22),
+              child: Image.network(waveResponse.files[0]),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 22),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RaisedButton(
+                    color: Color(0xFFef5350),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        'Discard',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: RaisedButton(
+                      color: Color(0xFF66BB6A),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onPressed: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          '  Save  ',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
