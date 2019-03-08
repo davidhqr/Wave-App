@@ -94,6 +94,7 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                     shape:
                     RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     onPressed: () {
+                      Navigator.pop(context);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(10),

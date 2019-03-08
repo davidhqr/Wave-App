@@ -55,7 +55,8 @@ class _PulsingButtonState extends State<PulsingButton>
                 _onPressed();
               },
               child: Text(
-                'Listen for',
+                'Listen for\nWaves',
+                textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),

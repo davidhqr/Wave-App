@@ -5,6 +5,7 @@ class Utils {
   static showSnackBar(BuildContext context, String msg) {
     Scaffold.of(context).showSnackBar(new SnackBar(
       content: new Text(msg),
+      duration: Duration(seconds: 2),
     ));
   }
 

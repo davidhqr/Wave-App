@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class SendWaveRequest {
   BuildContext _context;
@@ -17,8 +18,8 @@ class SendWaveRequest {
 
   final Logger log = new Logger('WaveRequest');
 
-  SendWaveRequest(BuildContext context, String code, String text, String filePath,
-      bool offline)
+  SendWaveRequest(BuildContext context, String code, String text,
+      String filePath, bool offline)
       : _context = context,
         _code = code,
         _text = text,
@@ -76,7 +77,7 @@ class SendWaveRequest {
       }
       log.info("Successfully saved online text wave");
 
-      var payload = new Uint8List.fromList(_code.codeUnits);
+      var payload = Uint8List.fromList(_code.codeUnits);
       await _sendChirp(payload);
 
       Utils.showSnackBar(_context, "Wave sent successfully");
@@ -85,29 +86,30 @@ class SendWaveRequest {
   }
 
   void _sendOnlineFileWave() async {
-    Uri requestUri = Uri.parse(Constants.BASE_WAVE_URL);
-    http.MultipartRequest request =
-        new http.MultipartRequest("POST", requestUri);
+    Dio dio = new Dio();
+    FormData formData = new FormData();
 
-    Uri fileUri = Uri.parse(_filePath);
-    List<int> bytes = await File.fromUri(fileUri).readAsBytes();
-    request.files.add(new http.MultipartFile.fromBytes("files", bytes));
-    request.fields["code"] = _code;
+    formData.add("files[]", new UploadFileInfo(File(_filePath), "test.jpg"));
+    formData.add("code", _code);
 
-    request.send().then((response) async {
-      if (response.statusCode != 200) {
-        Utils.showSnackBar(_context, "Failed to send Wave");
-        log.severe(
-            "Failed to save online file wave, responded with error code: " +
-                response.statusCode.toString());
-        return;
-      }
+    dio
+        .post(Constants.BASE_WAVE_URL,
+            data: formData,
+            options: Options(method: 'POST', responseType: ResponseType.json))
+        .then((response) async {
+      log.info("Successfully saved online file wave");
 
-      var payload = new Uint8List.fromList(_code.codeUnits);
+      var payload = Uint8List.fromList(_code.codeUnits);
       await _sendChirp(payload);
 
       Utils.showSnackBar(_context, "Wave sent successfully");
-      log.info("Successfully sent online text wave");
+      log.info("Successfully sent online file wave");
+    })
+        .catchError((error) {
+      Utils.showSnackBar(_context, "Failed to send Wave");
+      log.severe(
+          "Failed to save online text wave, responded with error code: " +
+              error);
     });
   }
 

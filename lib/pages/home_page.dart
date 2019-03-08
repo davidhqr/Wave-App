@@ -11,6 +11,9 @@ import 'package:wave/widgets/receive_dialog.dart';
 import 'package:wave/wave_response.dart';
 import 'package:wave/get_wave_request.dart';
 import 'package:wave/utils.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'dart:typed_data';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -55,7 +58,7 @@ class _HomePageState extends State<HomePage> {
 
   void _setChirpCallbacks() {
     ChirpSDK.onReceived.listen((dataEvent) {
-      String payload = dataEvent.payload.toString();
+      String payload = new String.fromCharCodes(dataEvent.payload);
       log.info("Received payload: " + payload);
       if (listening) {
         GetWaveRequest(payload).get().then((WaveResponse response) {
@@ -82,19 +85,55 @@ class _HomePageState extends State<HomePage> {
   }
 
   void startListening(BuildContext context) {
-    if (listening) {
-      Utils.showSnackBar(context, "Stopped listening");
-    } else {
-      Utils.showSnackBar(context, "Started listening");
-    }
+    Utils.showSnackBar(context, "Started listening for Waves");
     setState(() {
       listening = !listening;
     });
   }
 
+  Widget getListeningWidget(BuildContext context) {
+    if (listening) {
+      return Column(
+        children: [
+          SpinKitWave(
+            color: Color(0xFFf29891),
+            size: 100.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: RaisedButton(
+              color: Color(0xFFfa7268),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              onPressed: () {
+                setState(() {
+                  listening = false;
+                  Utils.showSnackBar(context, "Stopped listening for Waves");
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Text(
+                  'Stop Listening',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return PulsingButton(() {
+        startListening(context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFe8e8e8),
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
@@ -138,14 +177,56 @@ class _HomePageState extends State<HomePage> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 50),
+                padding: const EdgeInsets.only(top: 40),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PulsingButton(() {
-                      startListening(context);
-                    })
-                  ],
+                  children: [getListeningWidget(context)],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 40, left: 20, right: 20, bottom: 40),
+                child: Container(
+                  height: 380,
+                  decoration: new BoxDecoration(
+                      color: Colors.white, //new Color.fromRGBO(255, 0, 0, 0.0),
+                      borderRadius: new BorderRadius.all(Radius.circular(20)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFFbfbfbf),
+                          blurRadius: 20,
+                          // has the effect of softening the shadow
+                        )
+                      ]),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child:
+                        Text("Past Waves", style: TextStyle(fontSize: 20)),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8, right: 8, bottom: 8),
+                          child: ListView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.map),
+                                title: Text('Map'),
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.photo_album),
+                                title: Text('Album'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -41,7 +41,8 @@ class _SendImagePageState extends State<SendImagePage> {
     }
 
     String code = Utils.generateCode();
-    SendWaveRequest request = new SendWaveRequest(context, code, null, _imagePath, false);
+    SendWaveRequest request =
+        new SendWaveRequest(context, code, null, _imagePath, false);
     request.send();
   }
 
@@ -51,48 +52,57 @@ class _SendImagePageState extends State<SendImagePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 280,
-                  width: 280,
-                  decoration: new BoxDecoration(
-                    color: Colors.white70,
-                    borderRadius: BorderRadius.all(const Radius.circular(15)),
-                    border: Border.all(
-                        color: _imagePath == null
-                            ? Colors.black87
-                            : Color(0xFFfa7268)),
-                  ),
-                  child: _imagePath == null
-                      ? Center(child: Text('No image selected.'))
-                      : Image.file(new File(_imagePath)),
+      body: Builder(
+        builder: (BuildContext context) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 280,
+                      width: 280,
+                      decoration: new BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.all(const Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFFbfbfbf),
+                              blurRadius: 20,
+                              // has the effect of softening the shadow
+                            )
+                          ]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: _imagePath == null
+                            ? Center(child: Text('No image selected'))
+                            : Image.file(new File(_imagePath)),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          RaisedButton(
-            color: Color(0xFFfa7268),
-            elevation: 2,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            onPressed: () {
-              _sendImage(context);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                'Send Image Wave',
-                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
-            ),
-          ),
-        ],
+              RaisedButton(
+                color: Color(0xFFfa7268),
+                elevation: 2,
+                shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                onPressed: () {
+                  _sendImage(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Send Image Wave',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFFfa7268),
