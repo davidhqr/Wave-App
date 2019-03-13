@@ -25,20 +25,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool listening = false;
-  List<String> _waveData = new List<String>();
-
   final Logger log = new Logger('HomePage');
+  SharedPreferences prefs;
+
+  bool _listening = false;
+  List<String> _waveData = new List<String>();
 
   @override
   initState() {
     super.initState();
     _requestPermissions();
+    _initializeSharedPreferences();
     _initChirp();
     _configChirp();
     _setChirpCallbacks();
     _startAudioProcessing();
     setWaveData();
+  }
+
+  void _initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> _requestPermissions() async {
@@ -62,7 +68,7 @@ class _HomePageState extends State<HomePage> {
     ChirpSDK.onReceived.listen((dataEvent) {
       String payload = new String.fromCharCodes(dataEvent.payload);
       log.info("Received payload: " + payload);
-      if (listening) {
+      if (_listening) {
         if (payload.startsWith("wv")) {
           GetWaveRequest(payload).get().then((WaveResponse response) {
             saveWaveResponse(response);
@@ -121,15 +127,113 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void startListening(BuildContext context) {
+  void _startListening(BuildContext context) {
     Utils.showSnackBar(context, "Started listening for Waves");
     setState(() {
-      listening = !listening;
+      _listening = true;
     });
   }
 
-  Widget getListeningWidget(BuildContext context) {
-    if (listening) {
+  Widget _appBar() {
+    return AppBar(
+      title: Text(widget.title),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.text_fields),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SendTextPage(title: 'Send Text Wave')),
+            );
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.image),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      SendImagePage(title: 'Send Image Wave')),
+            );
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.attach_file),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SendFilePage(title: 'Send File Wave')),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _body() {
+    return Builder(
+      builder: (BuildContext context) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [_listeningWidget(context)],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 40, left: 20, right: 20, bottom: 40),
+                child: Container(
+                  height: 380,
+                  decoration: new BoxDecoration(
+                      color: Colors.white,
+                      //new Color.fromRGBO(255, 0, 0, 0.0),
+                      borderRadius: new BorderRadius.all(Radius.circular(20)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFFbfbfbf),
+                          blurRadius: 20,
+                          // has the effect of softening the shadow
+                        )
+                      ]),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Text("Recent Waves",
+                            style: TextStyle(fontSize: 20)),
+                      ),
+                      Expanded(
+                        child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8, right: 8, bottom: 8),
+                            child: ListView.builder(
+                              itemCount: _waveData.length,
+                              itemBuilder: (context, position) {
+                                return _historyWidget(
+                                    _waveData[_waveData.length - 1 - position]);
+                              },
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _listeningWidget(BuildContext context) {
+    if (_listening) {
       return Column(
         children: [
           SpinKitWave(
@@ -145,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(8)),
               onPressed: () {
                 setState(() {
-                  listening = false;
+                  _listening = false;
                   Utils.showSnackBar(context, "Stopped listening for Waves");
                 });
               },
@@ -162,12 +266,12 @@ class _HomePageState extends State<HomePage> {
       );
     } else {
       return PulsingButton(() {
-        startListening(context);
+        _startListening(context);
       });
     }
   }
 
-  Widget getHistoryElement(String item) {
+  Widget _historyWidget(String item) {
     if (isURL(item)) {
       return Card(
         child: Padding(
@@ -192,99 +296,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFe8e8e8),
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.text_fields),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        SendTextPage(title: 'Send Text Wave')),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.image),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        SendImagePage(title: 'Send Image Wave')),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.attach_file),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        SendFilePage(title: 'Send File Wave')),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Builder(
-        builder: (BuildContext context) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [getListeningWidget(context)],
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 40, left: 20, right: 20, bottom: 40),
-                  child: Container(
-                    height: 380,
-                    decoration: new BoxDecoration(
-                        color: Colors.white,
-                        //new Color.fromRGBO(255, 0, 0, 0.0),
-                        borderRadius: new BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFFbfbfbf),
-                            blurRadius: 20,
-                            // has the effect of softening the shadow
-                          )
-                        ]),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Text("Recent Waves",
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                        Expanded(
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, bottom: 8),
-                              child: ListView.builder(
-                                itemCount: _waveData.length,
-                                itemBuilder: (context, position) {
-                                  return getHistoryElement(_waveData[_waveData.length - 1 - position]);
-                                },
-                              )),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+      appBar: _appBar(),
+      body: _body(),
     );
   }
 }
