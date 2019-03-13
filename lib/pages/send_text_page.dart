@@ -15,15 +15,15 @@ class SendTextPage extends StatefulWidget {
 }
 
 class _SendTextPageState extends State<SendTextPage> {
-  TextEditingController textController = new TextEditingController();
-  bool offline = false;
-
   final Logger log = new Logger('WaveRequest');
+  final TextEditingController textController = new TextEditingController();
+
+  bool _offline = false;
 
   void _sendText(BuildContext context) {
     String text = textController.text;
 
-    if (offline && text.length > 32) {
+    if (_offline && text.length > 32) {
       Utils.showSnackBar(context, "Error sending offline Wave - text too long");
       log.warning(
           "Error saving offline wave request with text > 32 characters");
@@ -31,7 +31,8 @@ class _SendTextPageState extends State<SendTextPage> {
     }
 
     String code = Utils.generateCode();
-    SendWaveRequest request = new SendWaveRequest(context, code, text, null, offline);
+    SendWaveRequest request =
+        new SendWaveRequest(context, code, text, null, _offline);
     request.send();
   }
 
@@ -42,10 +43,10 @@ class _SendTextPageState extends State<SendTextPage> {
         title: Text(widget.title),
         actions: [
           Switch(
-            value: offline,
+            value: _offline,
             onChanged: (bool isOn) {
               setState(() {
-                offline = isOn;
+                _offline = isOn;
               });
             },
             activeColor: Colors.greenAccent,
@@ -54,7 +55,7 @@ class _SendTextPageState extends State<SendTextPage> {
           ),
         ],
       ),
-      body: Builder (
+      body: Builder(
         builder: (BuildContext context) {
           return Column(
             children: [
@@ -62,11 +63,11 @@ class _SendTextPageState extends State<SendTextPage> {
                 padding: const EdgeInsets.all(40),
                 child: TextField(
                   controller: textController,
-                  maxLength: offline ? 32 : 1000,
-                  maxLines: offline ? 2 : 10,
+                  maxLength: _offline ? 32 : 1000,
+                  maxLines: _offline ? 2 : 10,
                   decoration: InputDecoration(
-                    border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
                   ),
                   style: TextStyle(
                     color: Colors.black54,
@@ -77,15 +78,15 @@ class _SendTextPageState extends State<SendTextPage> {
               RaisedButton(
                 color: Color(0xFFfa7268),
                 elevation: 2,
-                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 onPressed: () {
                   _sendText(context);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Text(
-                    offline ? 'Send Offline Text Wave' : 'Send Text Wave',
+                    _offline ? 'Send Offline Text Wave' : 'Send Text Wave',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
