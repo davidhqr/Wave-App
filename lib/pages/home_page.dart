@@ -71,7 +71,6 @@ class _HomePageState extends State<HomePage> {
       if (_listening) {
         if (payload.startsWith("wv")) {
           GetWaveRequest(payload).get().then((WaveResponse response) {
-            saveWaveResponse(response);
             showDialog(
                 context: context,
                 builder: ((BuildContext context) {
@@ -80,7 +79,6 @@ class _HomePageState extends State<HomePage> {
           });
         } else {
           WaveResponse response = WaveResponse(null, payload, null, null);
-          saveWaveResponse(response);
           showDialog(
               context: context,
               builder: ((BuildContext context) {
@@ -159,16 +157,16 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
-        IconButton(
-          icon: Icon(Icons.attach_file),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SendFilePage(title: 'Send File Wave')),
-            );
-          },
-        ),
+//        IconButton(
+//          icon: Icon(Icons.attach_file),
+//          onPressed: () {
+//            Navigator.push(
+//              context,
+//              MaterialPageRoute(
+//                  builder: (context) => SendFilePage(title: 'Send File Wave')),
+//            );
+//          },
+//        ),
       ],
     );
   }
@@ -273,10 +271,20 @@ class _HomePageState extends State<HomePage> {
 
   Widget _historyWidget(String item) {
     if (isURL(item)) {
+      String after = item.substring(item.lastIndexOf('/') + 1);
+      String fileName = after.substring(0, after.lastIndexOf('?'));
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Image.network(item),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.network(item, height: 100, width: 100),
+              Expanded(
+                child: Text(fileName),
+              ),
+            ],
+          ),
         ),
       );
     } else {

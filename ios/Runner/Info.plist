@@ -21,11 +21,13 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Pick photo to send as Wave</string>
+	<string>Send and save photos with Wave</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Send and save photos with Wave</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Take photo to send as Wave</string>
+	<string>Taking photos to send with Wave</string>
 	<key>NSMicrophoneUsageDescription</key>
-    <string>Listen for Waves</string>
+	<string>Listen for Waves</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -34,8 +36,8 @@
 	<string>Main</string>
 	<key>UIBackgroundModes</key>
 	<array>
-	    <string>fetch</string>
-	    <string>remote-notifications</string>
+		<string>fetch</string>
+		<string>remote-notifications</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

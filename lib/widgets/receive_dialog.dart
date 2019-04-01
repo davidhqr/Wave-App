@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_downloader/image_downloader.dart';
 import 'package:wave/wave_response.dart';
 import 'package:wave/widgets/selectable_field.dart';
 
@@ -24,11 +25,25 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.waveResponse.text != null && widget.waveResponse.text.isNotEmpty) {
+    if (widget.waveResponse.text != null &&
+        widget.waveResponse.text.isNotEmpty) {
       return buildTextWaveDialog(widget.waveResponse);
     } else {
       return buildFileWaveDialog(widget.waveResponse);
     }
+  }
+
+  void saveFile(WaveResponse waveResponse) async {
+    try {
+      var imageId = await ImageDownloader.downloadImage(waveResponse.files[0]);
+      if (imageId == null) {
+        return;
+      }
+    } on Exception catch (error) {
+      print(error);
+    }
+    //Utils.showSnackBar(context, "Image saved to the photo gallery");
+    Navigator.pop(context);
   }
 
   Widget buildTextWaveDialog(WaveResponse waveResponse) {
@@ -111,9 +126,7 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                       elevation: 2,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: () {},
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
@@ -168,9 +181,12 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
             ),
 
             // dialog center
-            Padding(
-              padding: const EdgeInsets.only(top: 22),
-              child: Image.network(waveResponse.files[0]),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 22),
+                child:
+                    Image.network(waveResponse.files[0], fit: BoxFit.contain),
+              ),
             ),
 
             Padding(
@@ -202,7 +218,8 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       onPressed: () {
-                        Navigator.pop(context);
+                        saveFile(waveResponse);
+
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(10),
