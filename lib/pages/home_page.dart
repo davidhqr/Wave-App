@@ -149,12 +149,7 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           icon: Icon(Icons.image),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      SendImagePage(title: 'Send Image Wave')),
-            );
+            Navigator.pushNamed(context, '/home');
           },
         ),
 //        IconButton(

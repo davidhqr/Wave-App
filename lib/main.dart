@@ -14,14 +14,13 @@ void main() {
 class WaveApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Wave',
       theme: ThemeData(
         primaryColor: Color(0xFFfa7268),
         fontFamily: 'Roboto',
       ),
-      home: true ? TutorialPage() : HomePage(title: 'Home'),
+      home: TutorialPage(),
     );
   }
 }
