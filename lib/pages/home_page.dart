@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wave/pages/send_text_page.dart';
 import 'package:wave/pages/send_image_page.dart';
-import 'package:wave/pages/send_file_page.dart';
+//import 'package:wave/pages/send_file_page.dart';
 import 'package:wave/widgets/pulsing_button.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'package:wave/constants.dart';

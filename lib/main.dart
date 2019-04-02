@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wave/pages/home_page.dart';
+import 'package:wave/pages/tutorial_page.dart';
 import 'package:logging/logging.dart';
 
 void main() {
@@ -13,13 +14,14 @@ void main() {
 class WaveApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Wave',
       theme: ThemeData(
         primaryColor: Color(0xFFfa7268),
         fontFamily: 'Roboto',
       ),
-      home: HomePage(title: 'Home'),
+      home: true ? TutorialPage() : HomePage(title: 'Home'),
     );
   }
 }
