@@ -18,10 +18,8 @@ class _TutorialPageState extends State<TutorialPage> {
       _pageController.animateToPage(_pageController.page.toInt() + 1,
           duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(title: 'Home')),
-      );
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomePage(title: "Home")));
     }
   }
 

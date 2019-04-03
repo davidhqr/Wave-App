@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wave/pages/send_text_page.dart';
 import 'package:wave/pages/send_image_page.dart';
-//import 'package:wave/pages/send_file_page.dart';
 import 'package:wave/widgets/pulsing_button.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'package:wave/constants.dart';
@@ -149,19 +148,13 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           icon: Icon(Icons.image),
           onPressed: () {
-            Navigator.pushNamed(context, '/home');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SendImagePage(title: 'Send Image Wave')),
+            );
           },
         ),
-//        IconButton(
-//          icon: Icon(Icons.attach_file),
-//          onPressed: () {
-//            Navigator.push(
-//              context,
-//              MaterialPageRoute(
-//                  builder: (context) => SendFilePage(title: 'Send File Wave')),
-//            );
-//          },
-//        ),
       ],
     );
   }
