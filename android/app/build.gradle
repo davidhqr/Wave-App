@@ -33,6 +33,13 @@ if (keystorePropertiesFile.exists()) {
 android {
     compileSdkVersion 28
 
+    packagingOptions {
+        exclude 'META-INF/chirpsdk_release.kotlin_module'
+        exclude 'META-INF/androidx.versionedparcelable_versionedparcelable.version'
+        exclude 'META-INF/androidx.core_core.version'
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
+
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -58,11 +65,6 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-
-            minifyEnabled true
-            useProguard true
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

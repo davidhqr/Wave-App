@@ -342,6 +342,11 @@ class SelectableTextState extends State<SelectableText> with AutomaticKeepAliveC
   // State lifecycle:
 
   @override
+  void updateFloatingCursor(RawFloatingCursorPoint point) {
+    // TODO: implement updateFloatingCursor
+  }
+
+  @override
   void initState() {
     super.initState();
     widget.controller.addListener(_didChangeTextEditingValue);
