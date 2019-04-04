@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:wave/utils.dart';
-import 'package:wave/constants.dart';
+import 'package:Wave/utils.dart';
+import 'package:Wave/constants.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'dart:typed_data';
 import 'dart:io';

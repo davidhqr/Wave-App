@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wave/pages/home_page.dart';
-import 'package:wave/pages/tutorial_page.dart';
+import 'package:Wave/pages/home_page.dart';
+import 'package:Wave/pages/tutorial_page.dart';
 
 class SplashPage extends StatefulWidget {
   @override

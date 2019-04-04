@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:wave/pages/splash_page.dart';
+import 'package:Wave/pages/splash_page.dart';
 
 void main() {
   Logger.root.level = Level.ALL;

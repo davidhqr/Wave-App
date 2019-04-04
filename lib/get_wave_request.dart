@@ -1,6 +1,6 @@
 import 'package:logging/logging.dart';
-import 'package:wave/constants.dart';
-import 'package:wave/wave_response.dart';
+import 'package:Wave/constants.dart';
+import 'package:Wave/wave_response.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

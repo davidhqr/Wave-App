@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wave/send_wave_request.dart';
+import 'package:Wave/send_wave_request.dart';
 import 'package:logging/logging.dart';
-import 'package:wave/utils.dart';
+import 'package:Wave/utils.dart';
 
 class SendTextPage extends StatefulWidget {
   SendTextPage({Key key, this.title}) : super(key: key);

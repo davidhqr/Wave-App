@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_downloader/image_downloader.dart';
-import 'package:wave/wave_response.dart';
-import 'package:wave/widgets/selectable_field.dart';
+import 'package:Wave/wave_response.dart';
+import 'package:Wave/widgets/selectable_field.dart';
 
 class ReceiveDialog extends StatefulWidget {
   final WaveResponse waveResponse;

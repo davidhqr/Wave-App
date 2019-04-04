@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:wave/pages/home_page.dart';
+import 'package:Wave/pages/home_page.dart';
 
 class TutorialPage extends StatefulWidget {
   TutorialPage({Key key}) : super(key: key);

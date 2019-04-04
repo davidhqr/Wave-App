@@ -1,4 +1,4 @@
-package com.devdavid.wave;
+package com.devdavid.Wave;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
