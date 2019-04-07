@@ -33,6 +33,12 @@ class _SendImagePageState extends State<SendImagePage> {
     _startAudioProcessing();
   }
 
+  @override
+  void dispose() {
+    _stopAudioProcessing();
+    super.dispose();
+  }
+
   Future<void> _initChirp() async {
     await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
   }
@@ -43,6 +49,10 @@ class _SendImagePageState extends State<SendImagePage> {
 
   Future<void> _startAudioProcessing() async {
     await ChirpSDK.start();
+  }
+
+  Future<void> _stopAudioProcessing() async {
+    await ChirpSDK.stop();
   }
 
   Future<void> _sendChirp(Uint8List data) async {

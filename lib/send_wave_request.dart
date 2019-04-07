@@ -96,12 +96,12 @@ class SendWaveRequest {
       log.info("Successfully saved online file wave");
 
       var payload = Uint8List.fromList(_code.codeUnits);
-      _onSuccess(payload);
+      _onSuccess(_context, payload);
     }).catchError((error) {
       Utils.showSnackBar(_context, "Failed to send Wave");
       log.severe(
           "Failed to save online text wave, responded with error code: " +
-              error);
+              error.toString());
     });
   }
 }
