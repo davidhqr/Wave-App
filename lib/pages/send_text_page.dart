@@ -1,7 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:typed_data';
+
+import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
-import 'package:logging/logging.dart';
 import 'package:Wave/utils.dart';
+import 'package:chirpsdk/chirpsdk.dart';
+import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class SendTextPage extends StatefulWidget {
   SendTextPage({Key key, this.title}) : super(key: key);
@@ -20,6 +25,53 @@ class _SendTextPageState extends State<SendTextPage> {
 
   bool _offline = false;
 
+  @override
+  initState() {
+    super.initState();
+    _initChirp();
+    _configChirp();
+    _setChirpCallbacks();
+    _startAudioProcessing();
+  }
+
+  @override
+  void dispose() {
+    _stopAudioProcessing();
+    super.dispose();
+  }
+
+  Future<void> _initChirp() async {
+    await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+  }
+
+  Future<void> _configChirp() async {
+    await ChirpSDK.setConfig(Constants.APP_CONFIG);
+  }
+
+  Future<void> _startAudioProcessing() async {
+    await ChirpSDK.start();
+  }
+
+  Future<void> _stopAudioProcessing() async {
+    await ChirpSDK.stop();
+  }
+
+  Future<void> _sendChirp(Uint8List data) async {
+    ChirpSDK.send(data);
+  }
+
+  Future<void> _setChirpCallbacks() async {
+    ChirpSDK.onError.listen((error) {
+      log.severe(error.message);
+    });
+  }
+
+  void _onSuccess(BuildContext context, Uint8List payload) {
+    _sendChirp(payload);
+    Utils.showSnackBar(context, "Wave sent successfully");
+    log.info("Successfully sent offline file wave");
+  }
+
   void _sendText(BuildContext context) {
     String text = textController.text;
 
@@ -32,8 +84,8 @@ class _SendTextPageState extends State<SendTextPage> {
 
     String code = Utils.generateCode();
     SendWaveRequest request =
-        new SendWaveRequest(context, code, text, null, _offline);
-    request.send();
+        new SendWaveRequest(context, code, text, null, _offline, _onSuccess);
+    request.getPayload();
   }
 
   @override

@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
-import 'package:logging/logging.dart';
-import 'package:Wave/utils.dart';
+import 'dart:typed_data';
+
+import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
+import 'package:Wave/utils.dart';
+import 'package:chirpsdk/chirpsdk.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class SendImagePage extends StatefulWidget {
   SendImagePage({Key key, this.title}) : super(key: key);
@@ -19,6 +24,37 @@ class _SendImagePageState extends State<SendImagePage> {
 
   String _imagePath;
 
+  @override
+  void initState() {
+    super.initState();
+    _initChirp();
+    _configChirp();
+    _setChirpCallbacks();
+    _startAudioProcessing();
+  }
+
+  Future<void> _initChirp() async {
+    await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+  }
+
+  Future<void> _configChirp() async {
+    await ChirpSDK.setConfig(Constants.APP_CONFIG);
+  }
+
+  Future<void> _startAudioProcessing() async {
+    await ChirpSDK.start();
+  }
+
+  Future<void> _sendChirp(Uint8List data) async {
+    ChirpSDK.send(data);
+  }
+
+  Future<void> _setChirpCallbacks() async {
+    ChirpSDK.onError.listen((error) {
+      log.severe(error.message);
+    });
+  }
+
   void _pickImage() async {
     try {
       String imagePath = await FilePicker.getFilePath(type: FileType.IMAGE);
@@ -33,6 +69,12 @@ class _SendImagePageState extends State<SendImagePage> {
     }
   }
 
+  void _onSuccess(BuildContext context, Uint8List payload) {
+    _sendChirp(payload);
+    Utils.showSnackBar(context, "Wave sent successfully");
+    log.info("Successfully sent offline file wave");
+  }
+
   void _sendImage(BuildContext context) {
     if (_imagePath == null || _imagePath.isEmpty) {
       Utils.showSnackBar(context, "Select an image first");
@@ -42,8 +84,8 @@ class _SendImagePageState extends State<SendImagePage> {
 
     String code = Utils.generateCode();
     SendWaveRequest request =
-        new SendWaveRequest(context, code, null, _imagePath, false);
-    request.send();
+        new SendWaveRequest(context, code, null, _imagePath, false, _onSuccess);
+    request.getPayload();
   }
 
   Widget _imageDisplay() {

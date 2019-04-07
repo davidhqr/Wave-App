@@ -35,9 +35,6 @@ android {
 
     packagingOptions {
         exclude 'META-INF/chirpsdk_release.kotlin_module'
-        exclude 'META-INF/androidx.versionedparcelable_versionedparcelable.version'
-        exclude 'META-INF/androidx.core_core.version'
-        exclude 'META-INF/proguard/androidx-annotations.pro'
     }
 
     lintOptions {
@@ -52,9 +49,6 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        ndk {
-            abiFilters 'armeabi-v7a'
-        }
     }
 
     signingConfigs {

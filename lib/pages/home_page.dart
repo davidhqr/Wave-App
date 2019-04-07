@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:Wave/pages/send_text_page.dart';
 import 'package:Wave/pages/send_image_page.dart';
@@ -40,6 +42,12 @@ class _HomePageState extends State<HomePage> {
     _setChirpCallbacks();
     _startAudioProcessing();
     setWaveData();
+  }
+
+  @override
+  void dispose() {
+    _stopAudioProcessing();
+    super.dispose();
   }
 
   void _initializeSharedPreferences() async {
@@ -98,6 +106,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _startAudioProcessing() async {
     await ChirpSDK.start();
+  }
+
+  Future<void> _stopAudioProcessing() async {
+    await ChirpSDK.stop();
   }
 
   void saveWaveResponse(WaveResponse waveResponse) async {
