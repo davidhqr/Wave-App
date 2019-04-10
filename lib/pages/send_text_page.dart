@@ -8,6 +8,7 @@ import 'package:Wave/sending_state.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SendTextPage extends StatefulWidget {
   SendTextPage({Key key, this.title}) : super(key: key);
@@ -25,6 +26,7 @@ class _SendTextPageState extends State<SendTextPage> {
   final TextEditingController textController = new TextEditingController();
 
   bool _offline = false;
+  bool _sending = false;
 
   @override
   initState() {
@@ -68,6 +70,9 @@ class _SendTextPageState extends State<SendTextPage> {
 
     ChirpSDK.onSent.listen((sent) {
       SendingState().sending = false;
+      setState(() {
+        _sending = false;
+      });
     });
   }
 
@@ -105,12 +110,19 @@ class _SendTextPageState extends State<SendTextPage> {
     SendingState().sending = true;
     SendingState().time = DateTime.now();
 
+    setState(() {
+      _sending = true;
+    });
+
     Future.delayed(const Duration(seconds: 16), () {
       if (SendingState().sending &&
           DateTime.now()
               .subtract(Duration(seconds: 15))
               .isAfter(SendingState().time)) {
         SendingState().sending = false;
+        setState(() {
+          _sending = false;
+        });
         Utils.showSnackBar(context,
             "Sending Wave timed out. Check your internet connection and try again");
         log.warning("Sending wave timed out");
@@ -162,22 +174,26 @@ class _SendTextPageState extends State<SendTextPage> {
                   ),
                 ),
               ),
-              RaisedButton(
-                color: Color(0xFFfa7268),
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                onPressed: () {
-                  _sendText(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    _offline ? 'Send Offline Text Wave' : 'Send Text Wave',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
+              _sending
+                  ? SpinKitFadingFour()
+                  : RaisedButton(
+                      color: Color(0xFFfa7268),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      onPressed: () {
+                        _sendText(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          _offline
+                              ? 'Send Offline Text Wave'
+                              : 'Send Text Wave',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    ),
             ],
           );
         },
