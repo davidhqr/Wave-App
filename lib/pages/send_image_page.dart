@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
 import 'package:Wave/utils.dart';
+import 'package:Wave/sending_state.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,10 @@ class _SendImagePageState extends State<SendImagePage> {
     ChirpSDK.onError.listen((error) {
       log.severe(error.message);
     });
+
+    ChirpSDK.onSent.listen((sent) {
+      SendingState().sending = false;
+    });
   }
 
   void _pickImage() async {
@@ -92,6 +97,14 @@ class _SendImagePageState extends State<SendImagePage> {
       return;
     }
 
+    if (SendingState().sending) {
+      Utils.showSnackBar(context, "Another Wave is already being sent");
+      log.info(
+          "Another wave is already being sent");
+      return;
+    }
+
+    SendingState().sending = true;
     String code = Utils.generateCode();
     SendWaveRequest request =
         new SendWaveRequest(context, code, null, _imagePath, false, _onSuccess);

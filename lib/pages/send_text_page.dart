@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
 import 'package:Wave/utils.dart';
+import 'package:Wave/sending_state.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
@@ -64,23 +65,57 @@ class _SendTextPageState extends State<SendTextPage> {
     ChirpSDK.onError.listen((error) {
       log.severe(error.message);
     });
+
+    ChirpSDK.onSent.listen((sent) {
+      SendingState().sending = false;
+    });
   }
 
   void _onSuccess(BuildContext context, Uint8List payload) {
     _sendChirp(payload);
     Utils.showSnackBar(context, "Wave sent successfully");
-    log.info("Successfully sent offline file wave");
+    log.info("Successfully sent text wave");
   }
 
   void _sendText(BuildContext context) {
     String text = textController.text;
 
     if (_offline && text.length > 32) {
-      Utils.showSnackBar(context, "Error sending offline Wave - text too long");
+      Utils.showSnackBar(
+          context, "Error sending offline text Wave - text too long");
       log.warning(
           "Error saving offline wave request with text > 32 characters");
       return;
     }
+
+    if (!_offline && text.length > 1000) {
+      Utils.showSnackBar(
+          context, "Error sending online text Wave - text too long");
+      log.warning(
+          "Error saving online wave request with text > 1000 characters");
+      return;
+    }
+
+    if (SendingState().sending) {
+      Utils.showSnackBar(context, "Another Wave is already being sent");
+      log.info("Another wave is already being sent");
+      return;
+    }
+
+    SendingState().sending = true;
+    SendingState().time = DateTime.now();
+
+    Future.delayed(const Duration(seconds: 16), () {
+      if (SendingState().sending &&
+          DateTime.now()
+              .subtract(Duration(seconds: 15))
+              .isAfter(SendingState().time)) {
+        SendingState().sending = false;
+        Utils.showSnackBar(context,
+            "Sending Wave timed out. Check your internet connection and try again");
+        log.warning("Sending wave timed out");
+      }
+    });
 
     String code = Utils.generateCode();
     SendWaveRequest request =
