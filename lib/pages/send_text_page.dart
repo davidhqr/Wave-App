@@ -39,20 +39,26 @@ class _SendTextPageState extends State<SendTextPage> {
 
   @override
   void dispose() {
+    log.info("STATE DISPOSE");
     _stopAudioProcessing();
     super.dispose();
   }
 
   Future<void> _initChirp() async {
-    await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running)
+      await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
   }
 
   Future<void> _configChirp() async {
-    await ChirpSDK.setConfig(Constants.APP_CONFIG);
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running)
+      await ChirpSDK.setConfig(Constants.APP_CONFIG);
   }
 
   Future<void> _startAudioProcessing() async {
-    await ChirpSDK.start();
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running) await ChirpSDK.start();
   }
 
   Future<void> _stopAudioProcessing() async {
@@ -84,6 +90,12 @@ class _SendTextPageState extends State<SendTextPage> {
 
   void _sendText(BuildContext context) {
     String text = textController.text;
+
+    if (text == null || text.length == 0) {
+      Utils.showSnackBar(context, "Enter some text first");
+      log.warning("No text entered");
+      return;
+    }
 
     if (_offline && text.length > 32) {
       Utils.showSnackBar(
@@ -175,7 +187,9 @@ class _SendTextPageState extends State<SendTextPage> {
                 ),
               ),
               _sending
-                  ? SpinKitFadingFour()
+                  ? SpinKitFadingFour(
+                      color: Color(0xFFfa7268),
+                    )
                   : RaisedButton(
                       color: Color(0xFFfa7268),
                       elevation: 2,

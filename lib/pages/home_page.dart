@@ -68,7 +68,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _configChirp() async {
-    await ChirpSDK.setConfig(Constants.APP_CONFIG);
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running)
+      await ChirpSDK.setConfig(Constants.APP_CONFIG);
+  }
+
+  Future<void> _startAudioProcessing() async {
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running) await ChirpSDK.start();
+  }
+
+  Future<void> _stopAudioProcessing() async {
+    await ChirpSDK.stop();
   }
 
   void _setChirpCallbacks() {
@@ -102,14 +113,6 @@ class _HomePageState extends State<HomePage> {
     ChirpSDK.onReceiving.listen((dataEvent) {
       log.info("Receiving payload");
     });
-  }
-
-  Future<void> _startAudioProcessing() async {
-    await ChirpSDK.start();
-  }
-
-  Future<void> _stopAudioProcessing() async {
-    await ChirpSDK.stop();
   }
 
   void saveWaveResponse(WaveResponse waveResponse) async {
@@ -163,7 +166,8 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SendImagePage(title: 'Send Image Wave')),
+                  builder: (context) =>
+                      SendImagePage(title: 'Send Image Wave')),
             );
           },
         ),

@@ -15,7 +15,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 2), () {
       checkFirstSeen();
     });
   }
@@ -39,9 +39,13 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: Color(0xFFfa7268),
       body: Center(child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text("Wave", style: TextStyle(fontSize: 32, color: Colors.white),),
-          SpinKitPumpingHeart(color: Colors.white,),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: SpinKitPumpingHeart(color: Colors.white,),
+          ),
         ],
       )),
     );

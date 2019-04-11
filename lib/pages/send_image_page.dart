@@ -41,15 +41,20 @@ class _SendImagePageState extends State<SendImagePage> {
   }
 
   Future<void> _initChirp() async {
-    await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running)
+      await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
   }
 
   Future<void> _configChirp() async {
-    await ChirpSDK.setConfig(Constants.APP_CONFIG);
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running)
+      await ChirpSDK.setConfig(Constants.APP_CONFIG);
   }
 
   Future<void> _startAudioProcessing() async {
-    await ChirpSDK.start();
+    var state = await ChirpSDK.state;
+    if (state != ChirpState.running) await ChirpSDK.start();
   }
 
   Future<void> _stopAudioProcessing() async {
@@ -99,8 +104,7 @@ class _SendImagePageState extends State<SendImagePage> {
 
     if (SendingState().sending) {
       Utils.showSnackBar(context, "Another Wave is already being sent");
-      log.info(
-          "Another wave is already being sent");
+      log.info("Another wave is already being sent");
       return;
     }
 
