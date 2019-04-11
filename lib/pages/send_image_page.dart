@@ -4,11 +4,12 @@ import 'dart:typed_data';
 
 import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
-import 'package:Wave/utils.dart';
 import 'package:Wave/sending_state.dart';
+import 'package:Wave/utils.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logging/logging.dart';
 
 class SendImagePage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _SendImagePageState extends State<SendImagePage> {
   final Logger log = new Logger('WaveRequest');
 
   String _imagePath;
+  bool _sending;
 
   @override
   void initState() {
@@ -72,6 +74,9 @@ class _SendImagePageState extends State<SendImagePage> {
 
     ChirpSDK.onSent.listen((sent) {
       SendingState().sending = false;
+      setState(() {
+        _sending = false;
+      });
     });
   }
 
@@ -109,6 +114,27 @@ class _SendImagePageState extends State<SendImagePage> {
     }
 
     SendingState().sending = true;
+    SendingState().time = DateTime.now();
+
+    setState(() {
+      _sending = true;
+    });
+
+    Future.delayed(const Duration(seconds: 20), () {
+      if (SendingState().sending &&
+          DateTime.now()
+              .subtract(Duration(seconds: 19))
+              .isAfter(SendingState().time)) {
+        SendingState().sending = false;
+        setState(() {
+          _sending = false;
+        });
+        Utils.showSnackBar(context,
+            "Sending Wave timed out. Check your internet connection and try again.");
+        log.warning("Sending wave timed out");
+      }
+    });
+
     String code = Utils.generateCode();
     SendWaveRequest request =
         new SendWaveRequest(context, code, null, _imagePath, false, _onSuccess);
@@ -147,21 +173,26 @@ class _SendImagePageState extends State<SendImagePage> {
   }
 
   Widget _sendImageButton(BuildContext context) {
-    return RaisedButton(
-      color: Color(0xFFfa7268),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      onPressed: () {
-        _sendImage(context);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          'Send Image Wave',
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-      ),
-    );
+    return _sending
+        ? SpinKitWave(
+            color: Color(0xFFfa7268),
+          )
+        : RaisedButton(
+            color: Color(0xFFfa7268),
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            onPressed: () {
+              _sendImage(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Send Image Wave',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+          );
   }
 
   @override

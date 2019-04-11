@@ -3,12 +3,12 @@ import 'dart:typed_data';
 
 import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
-import 'package:Wave/utils.dart';
 import 'package:Wave/sending_state.dart';
+import 'package:Wave/utils.dart';
 import 'package:chirpsdk/chirpsdk.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:logging/logging.dart';
 
 class SendTextPage extends StatefulWidget {
   SendTextPage({Key key, this.title}) : super(key: key);
@@ -126,17 +126,17 @@ class _SendTextPageState extends State<SendTextPage> {
       _sending = true;
     });
 
-    Future.delayed(const Duration(seconds: 16), () {
+    Future.delayed(const Duration(seconds: 10), () {
       if (SendingState().sending &&
           DateTime.now()
-              .subtract(Duration(seconds: 15))
+              .subtract(Duration(seconds: 9))
               .isAfter(SendingState().time)) {
         SendingState().sending = false;
         setState(() {
           _sending = false;
         });
         Utils.showSnackBar(context,
-            "Sending Wave timed out. Check your internet connection and try again");
+            "Sending Wave timed out. Check your internet connection and try again.");
         log.warning("Sending wave timed out");
       }
     });
@@ -187,7 +187,7 @@ class _SendTextPageState extends State<SendTextPage> {
                 ),
               ),
               _sending
-                  ? SpinKitFadingFour(
+                  ? SpinKitWave(
                       color: Color(0xFFfa7268),
                     )
                   : RaisedButton(
