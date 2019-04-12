@@ -64,7 +64,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initChirp() async {
-    await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+    try {
+      var state = await ChirpSDK.state;
+      if (state != ChirpState.running)
+        await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+    } catch (exception) {
+      await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
+    }
   }
 
   Future<void> _configChirp() async {
@@ -90,18 +96,20 @@ class _HomePageState extends State<HomePage> {
         if (payload.startsWith("wv")) {
           GetWaveRequest(payload).get().then((WaveResponse response) {
             showDialog(
-                context: context,
-                builder: ((BuildContext context) {
-                  return ReceiveDialog(response);
-                }));
+                    context: context,
+                    builder: ((BuildContext context) {
+                      return ReceiveDialog(response);
+                    }))
+                .then((_) => setWaveData());
           });
         } else {
           WaveResponse response = WaveResponse(null, payload, null, null);
           showDialog(
-              context: context,
-              builder: ((BuildContext context) {
-                return ReceiveDialog(response);
-              }));
+                  context: context,
+                  builder: ((BuildContext context) {
+                    return ReceiveDialog(response);
+                  }))
+              .then((_) => setWaveData());
         }
       }
     });
@@ -113,21 +121,6 @@ class _HomePageState extends State<HomePage> {
     ChirpSDK.onReceiving.listen((dataEvent) {
       log.info("Receiving payload");
     });
-  }
-
-  void saveWaveResponse(WaveResponse waveResponse) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> list = prefs.getStringList("waves");
-    if (list == null) {
-      list = new List<String>();
-    }
-    if (waveResponse.text != null) {
-      list.add(waveResponse.text);
-    } else {
-      list.add(waveResponse.files[0].toString());
-    }
-    prefs.setStringList("waves", list);
-    setWaveData();
   }
 
   void setWaveData() async {
@@ -274,18 +267,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _historyWidget(String item) {
-    if (isURL(item)) {
+    if (isURL(item) && item.contains('?')) {
       String after = item.substring(item.lastIndexOf('/') + 1);
       String fileName = after.substring(0, after.lastIndexOf('?'));
       return Card(
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Image.network(item, height: 100, width: 100),
               Expanded(
-                child: Text(fileName),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(fileName, style: TextStyle(fontSize: 16.0)),
+                ),
               ),
             ],
           ),
@@ -294,7 +290,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       return Card(
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(12),
           child: Text(
             item,
             style: TextStyle(fontSize: 16.0),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:Wave/wave_response.dart';
 import 'package:Wave/widgets/selectable_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReceiveDialog extends StatefulWidget {
   final WaveResponse waveResponse;
@@ -13,14 +14,20 @@ class ReceiveDialog extends StatefulWidget {
 }
 
 class _ReceiveDialogState extends State<ReceiveDialog> {
+  SharedPreferences prefs;
   TextEditingController _textController = TextEditingController();
 
   bool preview = false;
 
   @override
   void initState() {
+    super.initState();
     _textController.text = widget.waveResponse.text;
-    return super.initState();
+    _initializeSharedPreferences();
+  }
+
+  void _initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -33,6 +40,20 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
     }
   }
 
+  void saveWaveResponse(WaveResponse waveResponse) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> list = prefs.getStringList("waves");
+    if (list == null) {
+      list = new List<String>();
+    }
+    if (waveResponse.text != null) {
+      list.add(waveResponse.text);
+    } else {
+      list.add(waveResponse.files[0].toString());
+    }
+    prefs.setStringList("waves", list);
+  }
+
   void saveFile(WaveResponse waveResponse) async {
     try {
       var imageId = await ImageDownloader.downloadImage(waveResponse.files[0]);
@@ -42,8 +63,7 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
     } on Exception catch (error) {
       print(error);
     }
-    //Utils.showSnackBar(context, "Image saved to the photo gallery");
-    Navigator.pop(context);
+    saveWaveResponse(waveResponse);
   }
 
   Widget buildTextWaveDialog(WaveResponse waveResponse) {
@@ -126,7 +146,10 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                       elevation: 2,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {},
+                      onPressed: () {
+                        saveWaveResponse(waveResponse);
+                        Navigator.pop(context);
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
@@ -219,7 +242,7 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
                           borderRadius: BorderRadius.circular(8)),
                       onPressed: () {
                         saveFile(waveResponse);
-
+                        Navigator.pop(context);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(10),

@@ -25,7 +25,7 @@ class _SendImagePageState extends State<SendImagePage> {
   final Logger log = new Logger('WaveRequest');
 
   String _imagePath;
-  bool _sending;
+  bool _sending = false;
 
   @override
   void initState() {
@@ -161,7 +161,7 @@ class _SendImagePageState extends State<SendImagePage> {
                   )
                 ]),
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               child: _imagePath == null
                   ? Center(child: Text('No image selected'))
                   : Image.file(new File(_imagePath)),

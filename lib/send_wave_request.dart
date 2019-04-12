@@ -85,7 +85,8 @@ class SendWaveRequest {
     Dio dio = new Dio();
     FormData formData = new FormData();
 
-    formData.add("files[]", new UploadFileInfo(File(_filePath), "test.jpg"));
+    String fileName = _filePath.substring(_filePath.lastIndexOf('/') + 1);
+    formData.add("files[]", new UploadFileInfo(File(_filePath), fileName));
     formData.add("code", _code);
 
     await dio
