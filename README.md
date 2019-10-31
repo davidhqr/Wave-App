@@ -1,16 +1,64 @@
-# wave
+# Wave Flutter App
 
-Wave mobile application
+## Overview
 
-## Getting Started
+This is the Wave Flutter App. It allows for the transfer of images and text over sound.
 
-This project is a starting point for a Flutter application.
+## Structure
 
-A few resources to get you started if this is your first Flutter project:
+### Home Page
+- Button to toggle listening for Waves
+- History widget which contains previously received Waves
+- Popup when a Wave is received
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+### Screenshots:
+Home:
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home.jpg" width="200">
+
+Home Listening:
+
+<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home_listen.jpg" width="200">
+
+Home Receiving:
+
+<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home_receive.jpg" width="200">
+
+### Send Text Page
+- Toggle button to toggle between online and offline mode
+
+### Screenshots:
+Send Text Online:
+
+<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_send_text_online.jpg" width="200">
+
+Send Text Offline:
+
+<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_send_text_offline.jpg" width="200">
+
+### Send Image Page
+- Image selector to choose the image to send
+
+### Screenshots:
+Send Image:
+
+<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_send_image.jpg" width="200">
+
+## Setup
+1. Install Flutter: https://flutter.dev/docs/get-started/install
+2. Install Android Studio and its Flutter Plugin: https://flutter.dev/docs/get-started/editor
+3. Accept the Android SDK license: `~/Library/Android/sdk/tools/bin/sdkmanager --licenses`
+
+## Building
+1. Execute `flutter build apk` to build the Android APK
+2. Execute `flutter build ios` to build the iOS app
+
+## Running
+1. Connect device
+2. Execute `flutter run`
+
+## Deploying to Google Play
+Soon
+
+## Deploying to the App Store
+Soon
