@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:Wave/wave_response.dart';
-import 'package:Wave/widgets/selectable_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ReceiveDialog extends StatefulWidget {
@@ -104,16 +103,15 @@ class _ReceiveDialogState extends State<ReceiveDialog> {
             // dialog center
             Padding(
               padding: const EdgeInsets.only(top: 22),
-              child: SelectableField(
-                controller: _textController,
-                maxLines: 7,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5)),
+                child: SelectableText(
+                  waveResponse.text,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),

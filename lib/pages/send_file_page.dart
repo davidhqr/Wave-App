@@ -4,7 +4,6 @@ class SendFilePage extends StatefulWidget {
   SendFilePage({Key key, this.title}) : super(key: key);
 
   final String title;
-  bool offlineMode = false;
 
   @override
   _SendFilePageState createState() => _SendFilePageState();
