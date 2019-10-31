@@ -5,7 +5,7 @@ import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
 import 'package:Wave/sending_state.dart';
 import 'package:Wave/utils.dart';
-import 'package:chirpsdk/chirpsdk.dart';
+import 'package:chirp_flutter/chirp_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logging/logging.dart';
@@ -70,10 +70,6 @@ class _SendTextPageState extends State<SendTextPage> {
   }
 
   Future<void> _setChirpCallbacks() async {
-    ChirpSDK.onError.listen((error) {
-      log.severe(error.message);
-    });
-
     ChirpSDK.onSent.listen((sent) {
       SendingState().sending = false;
       setState(() {

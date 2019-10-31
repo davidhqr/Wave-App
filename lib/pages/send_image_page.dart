@@ -6,7 +6,7 @@ import 'package:Wave/constants.dart';
 import 'package:Wave/send_wave_request.dart';
 import 'package:Wave/sending_state.dart';
 import 'package:Wave/utils.dart';
-import 'package:chirpsdk/chirpsdk.dart';
+import 'package:chirp_flutter/chirp_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -68,10 +68,6 @@ class _SendImagePageState extends State<SendImagePage> {
   }
 
   Future<void> _setChirpCallbacks() async {
-    ChirpSDK.onError.listen((error) {
-      log.severe(error.message);
-    });
-
     ChirpSDK.onSent.listen((sent) {
       SendingState().sending = false;
       setState(() {
@@ -97,7 +93,7 @@ class _SendImagePageState extends State<SendImagePage> {
   void _onSuccess(BuildContext context, Uint8List payload) {
     _sendChirp(payload);
     Utils.showSnackBar(context, "Wave sent successfully");
-    log.info("Successfully sent offline file wave");
+    log.info("Successfully sent online file wave");
   }
 
   void _sendImage(BuildContext context) {

@@ -23,7 +23,7 @@ dependencies:
   random_string: ^0.0.2
   logging: ^0.11.3
   http: ^0.12.0
-  chirpsdk: ^0.1.1
+  chirp_flutter: ^1.0.0
   permission_handler: ^3.0.0
   flutter_spinkit: ^3.1.0
   dio: ^2.1.0

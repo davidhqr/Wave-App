@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:Wave/pages/send_text_page.dart';
 import 'package:Wave/pages/send_image_page.dart';
 import 'package:Wave/widgets/pulsing_button.dart';
-import 'package:chirpsdk/chirpsdk.dart';
+import 'package:chirp_flutter/chirp_flutter.dart';
 import 'package:Wave/constants.dart';
 import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,9 +38,7 @@ class _HomePageState extends State<HomePage> {
     _requestPermissions();
     _initializeSharedPreferences();
     _initChirp();
-    _configChirp();
     _setChirpCallbacks();
-    _startAudioProcessing();
     setWaveData();
   }
 
@@ -65,23 +63,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _initChirp() async {
     try {
-      var state = await ChirpSDK.state;
-      if (state != ChirpState.running)
-        await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
-    } catch (exception) {
       await ChirpSDK.init(Constants.APP_KEY, Constants.APP_SECRET);
-    }
-  }
-
-  Future<void> _configChirp() async {
-    var state = await ChirpSDK.state;
-    if (state != ChirpState.running)
       await ChirpSDK.setConfig(Constants.APP_CONFIG);
-  }
-
-  Future<void> _startAudioProcessing() async {
-    var state = await ChirpSDK.state;
-    if (state != ChirpState.running) await ChirpSDK.start();
+      await ChirpSDK.start();
+    } catch (exception) {
+      log.severe(exception.toString());
+    }
   }
 
   Future<void> _stopAudioProcessing() async {
@@ -112,10 +99,6 @@ class _HomePageState extends State<HomePage> {
               .then((_) => setWaveData());
         }
       }
-    });
-
-    ChirpSDK.onError.listen((errorEvent) {
-      log.severe(errorEvent.message);
     });
 
     ChirpSDK.onReceiving.listen((dataEvent) {
