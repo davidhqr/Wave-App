@@ -3,6 +3,7 @@
 ## Overview
 
 This is the Wave Flutter App. It allows for the transfer of images and text over sound.
+Wave Backend API: https://github.com/davidhqr/Wave-API
 
 ## Structure
 
