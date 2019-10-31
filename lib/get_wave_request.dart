@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:Wave/constants.dart';
 import 'package:Wave/wave_response.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 
 class GetWaveRequest {

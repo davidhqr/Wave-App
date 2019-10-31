@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
 class PulsingButton extends StatefulWidget {
-  Function _onPressed;
+  final Function _onPressed;
 
   PulsingButton(this._onPressed);
 
