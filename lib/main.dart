@@ -21,6 +21,7 @@ class WaveApp extends StatelessWidget {
         fontFamily: 'Roboto',
       ),
       home: SplashPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

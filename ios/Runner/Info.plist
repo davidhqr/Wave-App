@@ -15,30 +15,43 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Send and save photos with Wave</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Send and save photos with Wave</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Taking photos to send with Wave</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Listen for Waves</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Send Waves with media files</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Schedule sending Waves</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Taking photos to send with Wave</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Allows sending Waves to contacts</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Send Waves with location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Send Waves with Location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Listen for Waves</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Send Waves using motion</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Send and save photos with Wave</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Send and save photos with Wave</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Sned Waves using speech</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notifications</string>
-	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

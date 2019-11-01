@@ -64,3 +64,10 @@ Soon
 
 ## Deploying to the App Store
 Soon
+
+## Troubleshooting
+
+### The sandbox is not in sync with the Podfile.lock
+1. Execute `flutter clean`
+2. Delete `Podfile.lock` and the `Pods` folder from `/ios`
+3. Execute `pod install --repo-update`

@@ -27,7 +27,7 @@ class _TutorialPageState extends State<TutorialPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageIndicatorContainer(
-        pageView: PageView(
+        child: PageView(
           controller: _pageController,
           children: [
             Container(
@@ -262,7 +262,7 @@ class _TutorialPageState extends State<TutorialPage> {
         indicatorColor: Colors.white,
         indicatorSelectorColor: Colors.grey,
         padding: EdgeInsets.only(bottom: 10.0),
-        size: 7.0,
+        shape: IndicatorShape.circle(size: 7),
         indicatorSpace: 10.0,
       ),
       floatingActionButton: FloatingActionButton(

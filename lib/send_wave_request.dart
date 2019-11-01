@@ -83,11 +83,14 @@ class SendWaveRequest {
 
   void _sendOnlineFileWave() async {
     Dio dio = new Dio();
-    FormData formData = new FormData();
-
     String fileName = _filePath.substring(_filePath.lastIndexOf('/') + 1);
-    formData.add("files[]", new UploadFileInfo(File(_filePath), fileName));
-    formData.add("code", _code);
+
+    FormData formData = FormData.fromMap({
+      "code": _code,
+      "files": [
+        await MultipartFile.fromFile(_filePath, filename: fileName)
+      ]
+    });
 
     await dio
         .post(Constants.BASE_WAVE_URL,
