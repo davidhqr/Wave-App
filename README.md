@@ -8,43 +8,10 @@ Wave Backend API: https://github.com/davidhqr/Wave-API
 
 ## Structure
 
-### Home Page
-- Button to toggle listening for Waves
-- History widget which contains previously received Waves
-- Popup when a Wave is received
+[this Home Page](Home.md)
+[this Send Text Page](SendText.md)
+[this Send Image Page](SendImage.md)
 
-### Screenshots:
-Home:
-
-<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home.jpg" width="200">
-
-Home Listening:
-
-<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home_listen.jpg" width="200">
-
-Home Receiving:
-
-<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home_receive.jpg" width="200">
-
-### Send Text Page
-- Toggle button to toggle between online and offline mode
-
-### Screenshots:
-Send Text Online:
-
-<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_send_text_online.jpg" width="200">
-
-Send Text Offline:
-
-<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_send_text_offline.jpg" width="200">
-
-### Send Image Page
-- Image selector to choose the image to send
-
-### Screenshots:
-Send Image:
-
-<img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_send_image.jpg" width="200">
 
 ## Setup
 1. Install Flutter: https://flutter.dev/docs/get-started/install
@@ -60,10 +27,17 @@ Send Image:
 2. Execute `flutter run`
 
 ## Deploying to Google Play
-Soon
+1. Reference: https://flutter.dev/docs/deployment/android
+2. Generate `key.jks` and add your `key.properties`
+3. `flutter build appbundle`
+4. Upload the app bundle to Google Play Console
+5. Follow instructions in Google Play Console
 
 ## Deploying to the App Store
-Soon
+1. Reference: https://flutter.dev/docs/deployment/ios
+2. Create an archive in Xcode
+3. Upload the archive to App Store Connect
+4. Follow instructions in App Store Connect
 
 ## Troubleshooting
 
