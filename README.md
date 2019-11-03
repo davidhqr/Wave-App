@@ -29,7 +29,7 @@ Wave Backend API: https://github.com/davidhqr/Wave-API
 ## Deploying to Google Play
 1. Reference: https://flutter.dev/docs/deployment/android
 2. Generate `key.jks` and add your `key.properties`
-3. `flutter build appbundle`
+3. Execute `flutter build appbundle`
 4. Upload the app bundle to Google Play Console
 5. Follow instructions in Google Play Console
 
