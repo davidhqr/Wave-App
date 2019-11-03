@@ -8,9 +8,9 @@ Wave Backend API: https://github.com/davidhqr/Wave-API
 
 ## Structure
 
-[this Home Page](Home.md)
-[this Send Text Page](SendText.md)
-[this Send Image Page](SendImage.md)
+[Home Page](Home.md)  
+[Send Text Page](SendText.md)  
+[Send Image Page](SendImage.md)
 
 
 ## Setup
