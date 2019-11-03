@@ -4,14 +4,11 @@
 - Popup when a Wave is received
 
 ## Screenshots:
-Home:
-
+Home:  
 <img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home.jpg" width="200">
 
-Home Listening:
-
+Home Listening:  
 <img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home_listen.jpg" width="200">
 
-Home Receiving:
-
+Home Receiving:  
 <img src="https://github.com/davidhqr/Wave-App/blob/master/screenshots/wave_home_receive.jpg" width="200">
