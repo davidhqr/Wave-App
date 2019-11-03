@@ -23,7 +23,7 @@ Wave Backend API: https://github.com/davidhqr/Wave-API
 2. Execute `flutter build ios` to build the iOS app
 
 ## Running
-1. Connect device
+1. Connect device or open iOS/Android simulator
 2. Execute `flutter run`
 
 ## Deploying to Google Play
