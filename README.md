@@ -1,10 +1,10 @@
 # Wave Flutter (Android and iOS) App
 
 [![Contact](https://img.shields.io/badge/contact-%40davidhqr-blue)](https://github.com/davidhqr)
-[![GitHub license](https://img.shields.io/github/license/davidhqr/Wave-API)](https://github.com/davidhqr/Wave-App)
-[![GitHub issues](https://img.shields.io/github/issues/davidhqr/Wave-API)](https://github.com/davidhqr/Wave-App/issues)
-[![GitHub stars](https://img.shields.io/github/stars/davidhqr/Wave-API)](https://github.com/davidhqr/Wave-App/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/davidhqr/Wave-API)](https://github.com/davidhqr/Wave-App/network)
+[![GitHub license](https://img.shields.io/github/license/davidhqr/Wave-App)](https://github.com/davidhqr/Wave-App)
+[![GitHub issues](https://img.shields.io/github/issues/davidhqr/Wave-App)](https://github.com/davidhqr/Wave-App/issues)
+[![GitHub stars](https://img.shields.io/github/stars/davidhqr/Wave-App)](https://github.com/davidhqr/Wave-App/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/davidhqr/Wave-App)](https://github.com/davidhqr/Wave-App/network)
 
 ## Overview
 
