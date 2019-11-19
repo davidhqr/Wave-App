@@ -1,4 +1,4 @@
-# Wave Flutter (Android and iOS) App
+# Wave Flutter (Android & iOS) App
 
 [![Contact](https://img.shields.io/badge/contact-%40davidhqr-blue)](https://github.com/davidhqr)
 [![GitHub license](https://img.shields.io/github/license/davidhqr/Wave-App)](https://github.com/davidhqr/Wave-App)
